@@ -16,6 +16,7 @@ const NoteTable: React.FC<NoteTableProps> = ({
   onEdit,
   unlockNotes,
 }) => {
+  console.log('===>', notes)
   const note: Note = {
     id: 1,
     title: "Some Title",
