@@ -1,0 +1,8 @@
+.unlock-btn {
+    cursor: pointer;
+    text-decoration: underline;
+}
+
+.modal-err {
+    color: red;
+}
