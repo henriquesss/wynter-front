@@ -1,7 +1,6 @@
 import React from "react";
 import { Note } from "../../types/Note";
 import "./index.css";
-import { Modal } from "react-bootstrap";
 
 export interface NoteItemProps {
   id: number;
@@ -19,14 +18,14 @@ const NoteItem: React.FC<NoteItemProps> = ({
   unlockNotes,
 }) => {
   return (
-    <tr key={0}>
-      <td>Note Title</td>
-      <td>Note Content</td>
+    <tr key={id}>
+      <td>{note.title}</td>
+      <td className="note-content">{note.content}</td>
       <td>
         <button
           className="outlined"
           data-testid={`note-edit-${id}`}
-          onClick={() => {}}
+          onClick={() => onEdit(note)}
         >
           Edit
         </button>

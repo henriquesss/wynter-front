@@ -5,30 +5,31 @@ import NoteTable from "../NoteTable";
 
 const NoteManager: React.FC = () => {
   useEffect(() => {
-    // get all notes from storage
-    // put them inside on notes state
-    // pass it to NoteTable
-    const localNotes:Note[] | null = localStorage.getItem('notes');
-
-    setNotes(localNotes);
-  }, [])
+    listAll();
+  }, []);
 
   const [notes, setNotes] = useState<Note[]>([]);
   const [noteToEdit, setNoteToEdit] = useState<Note | null>(null);
 
-  // Note: remove id from type Note in this case**
-  const storageNote = (data:Note) => {
-    /*
-      Check data params
-      Storage on the localStorage
-    */
+  function listAll() {
+    const allNotes = JSON.parse(localStorage.getItem("notes") || "[]");
 
-    /*
-     [] get some type array from localstorage
-     [] insert the new note in this array
-    */
+    setNotes(allNotes);
+  }
+
+  // Note: remove id from type Note in this case**
+  const storageNote = (newNote:Note) => {
+    const notes: Note[] = JSON.parse(localStorage.getItem("notes") || "[]");
+    notes.push(newNote);
+    localStorage.setItem("notes", JSON.stringify(notes));
+
+    listAll();
+  }
+
+  const editNote = (noteToEdit:Note) => {
+    setNoteToEdit(noteToEdit);
     
-   console.log('ARRIVED', data)
+    listAll();
   }
 
   return (
@@ -36,11 +37,11 @@ const NoteManager: React.FC = () => {
       className="layout-column align-items-center justify-content-start"
       data-testid="note-manager"
     >
-      <NoteForm onSubmit={storageNote} noteToEdit={undefined} />
+      <NoteForm onSubmit={storageNote} noteToEdit={noteToEdit} />
       <NoteTable
         notes={notes}
         onDelete={() => {}}
-        onEdit={() => {}}
+        onEdit={(noteToUpdate) => editNote(noteToUpdate)}
         unlockNotes={() => {}}
       />
     </div>

@@ -1,4 +1,4 @@
-import React, { memo, useEffect, useState } from "react";
+import React, { memo, useState } from "react";
 
 interface NoteTableProps {
   // filterData: (search: string, sortBy: 'asc' | 'desc', priority?: 'low' | 'medium' | 'high') => void;
