@@ -12,10 +12,11 @@ import { Note } from "../../types/Note";
 
 export interface NoteFormProps {
   onSubmit: (note: Note) => void;
+  onEdit: (noteToEdit: Note) => void;
   noteToEdit?: Note | null;
 }
 
-const NoteForm: React.FC<NoteFormProps> = ({ onSubmit, noteToEdit }) => {
+const NoteForm: React.FC<NoteFormProps> = ({ onSubmit, onEdit, noteToEdit }) => {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [priority, setPriority] = useState("low");
@@ -37,6 +38,8 @@ const NoteForm: React.FC<NoteFormProps> = ({ onSubmit, noteToEdit }) => {
       notes = notes.map(note => (note.id === noteToEdit.id ? newData : note));
 
       localStorage.setItem("notes", JSON.stringify(notes));
+
+      onEdit(noteToEdit);
     } else {
       // Just used math.Random() for the test. In production enviroment, the best option is the id gived by the databases
       const newNote = {

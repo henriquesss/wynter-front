@@ -36,6 +36,7 @@ const NoteTable: React.FC<NoteTableProps> = ({
         <tbody data-testid="notes-list">
           {notes.map((note, index) => (
             <NoteItem
+              key={index}
               note={note}
               id={index} // for passing loop index for testids
               onDelete={() => {}}

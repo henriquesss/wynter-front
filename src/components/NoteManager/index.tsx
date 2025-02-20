@@ -17,7 +17,6 @@ const NoteManager: React.FC = () => {
     setNotes(allNotes);
   }
 
-  // Note: remove id from type Note in this case**
   const storageNote = (newNote:Note) => {
     const notes: Note[] = JSON.parse(localStorage.getItem("notes") || "[]");
     notes.push(newNote);
@@ -37,11 +36,11 @@ const NoteManager: React.FC = () => {
       className="layout-column align-items-center justify-content-start"
       data-testid="note-manager"
     >
-      <NoteForm onSubmit={storageNote} noteToEdit={noteToEdit} />
+      <NoteForm onSubmit={storageNote} noteToEdit={noteToEdit} onEdit={editNote} />
       <NoteTable
         notes={notes}
         onDelete={() => {}}
-        onEdit={(noteToUpdate) => editNote(noteToUpdate)}
+        onEdit={editNote}
         unlockNotes={() => {}}
       />
     </div>
