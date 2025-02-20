@@ -39,6 +39,10 @@ const NoteForm: React.FC<NoteFormProps> = ({ onSubmit, onEdit, noteToEdit }) => 
 
       localStorage.setItem("notes", JSON.stringify(notes));
 
+      setTitle('');
+      setContent('');
+      setPriority('low')
+
       onEdit(noteToEdit);
     } else {
       // Just used math.Random() for the test. In production enviroment, the best option is the id gived by the databases
