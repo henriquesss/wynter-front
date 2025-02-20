@@ -6,37 +6,65 @@ import { Note } from "../../types/Note";
   [X] Get the priority input data
   [x] Implement the disable function to the submit button
   [x] Get a function from parent component to submit the new note (better way)
-  [] Validate the input data before send to parent component function
-    [] Issue with onSubmit 
-     - button option
-     - form option
+  [x] Validate the input data before send to parent component function (handleDisabledAdd)
+  [x] Fix issue with onSubmit
 */
 
 export interface NoteFormProps {
   onSubmit: (note: Note) => void;
-  noteToEdit?: Note;
+  onEdit: (noteToEdit: Note) => void;
+  noteToEdit?: Note | null;
 }
 
-const NoteForm: React.FC<NoteFormProps> = ({ onSubmit, noteToEdit }) => {
+const NoteForm: React.FC<NoteFormProps> = ({ onSubmit, onEdit, noteToEdit }) => {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [priority, setPriority] = useState("low");
 
-  useEffect(() => {});
+  useEffect(() => {
+    if (noteToEdit) {
+      setTitle(noteToEdit.title);
+      setContent(noteToEdit.content);
+      setPriority(noteToEdit.priority || '');
+    }
+  }, [noteToEdit]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (noteToEdit) {
+      let notes: Note[] = JSON.parse(localStorage.getItem("notes") || "[]");
+      const newData = { id: noteToEdit.id, title, content, priority}
+      notes = notes.map(note => (note.id === noteToEdit.id ? newData : note));
+
+      localStorage.setItem("notes", JSON.stringify(notes));
+
+      setTitle('');
+      setContent('');
+      setPriority('low')
+
+      onEdit(noteToEdit);
+    } else {
+      // Just used math.Random() for the test. In production enviroment, the best option is the id gived by the databases
+      const newNote = {
+        id: parseInt(Date.now().toString() + Math.floor(Math.random() * 1000).toString().padStart(3, '0')),
+        title,
+        content,
+        priority
+      }
+        
+      setTitle('');
+      setContent('');
+      setPriority('low')
   
-    console.log('1 ==> handleSubmit')
+      onSubmit(newNote);
+    }
 
-    const newNote = { id: Math.random(), title, content, priority}
-    console.log('2 ==>', newNote)
-
-    onSubmit(newNote);
   };
-
+  
   const handleDisableAdd = ():boolean => {
-    if (title && content) {
+    // Priority was not in the Acceptance criteria, but will help with the filter
+    if (title && content && priority) {
       return false;
     }
 
@@ -87,32 +115,14 @@ const NoteForm: React.FC<NoteFormProps> = ({ onSubmit, noteToEdit }) => {
               <option value="high">High</option>
             </select>
           </section>
-          {/* <section className="mt-20 mr-20 ml-20">
-            <input
-              type="checkbox"
-              data-testid="form-password-checkbox"
-              className="mr-10"
-              checked={showPassword}
-              onChange={() => {}}
-            />{" "}
-            Enable Password
-            {showPassword && (
-              <input
-                type="password"
-                placeholder="Password"
-                value={password}
-                data-testid="form-password-input"
-                className="form-input password-input"
-                onChange={() => {}}
-              />
-            )}
-          </section> */}
           <section className="layout-row align-items-center justify-content-center mt-20 mr-20 ml-20">
             <button
               type="submit"
               data-testid="form-submit-button"
               disabled={handleDisableAdd()}
-              //onSubmit={event => handleSubmit(event)}
+              onSubmit={event => {
+                handleSubmit(event)}
+              }
             >
               {noteToEdit ? "Update" : "Add"}
             </button>

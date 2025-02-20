@@ -16,12 +16,6 @@ const NoteTable: React.FC<NoteTableProps> = ({
   onEdit,
   unlockNotes,
 }) => {
-  console.log('===>', notes)
-  const note: Note = {
-    id: 1,
-    title: "Some Title",
-    content: "Some Content",
-  };
   const [filterParams, setFilterParams] = useState<{
     search: string;
     sortBy: "asc" | "desc";
@@ -30,7 +24,9 @@ const NoteTable: React.FC<NoteTableProps> = ({
 
   return (
     <div className="card w-90 pt-35 pb-8 mt-2">
-      <NoteFilter setFilterParams={setFilterParams} />
+      <NoteFilter
+        setFilterParams={setFilterParams}
+      />
       <table>
         <thead>
           <tr>
@@ -38,13 +34,16 @@ const NoteTable: React.FC<NoteTableProps> = ({
           </tr>
         </thead>
         <tbody data-testid="notes-list">
-          <NoteItem
-            note={note}
-            id={0} // for passing loop index for testids
-            onDelete={() => {}}
-            onEdit={() => {}}
-            unlockNotes={unlockNotes}
-          />
+          {notes.map((note, index) => (
+            <NoteItem
+              key={index}
+              note={note}
+              id={index} // for passing loop index for testids
+              onDelete={() => {}}
+              onEdit={note => onEdit(note)}
+              unlockNotes={unlockNotes}
+            />
+          ))}
         </tbody>
       </table>
     </div>
